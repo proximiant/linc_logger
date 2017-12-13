@@ -2,7 +2,7 @@ import os
 import setuptools
 import zlib
 
-module_path = os.path.join(os.path.dirname(__file__), 'log.py')
+module_path = os.path.join(os.path.dirname(__file__), 'linclogger/log.py')
 version_line = [line for line in open(module_path)
                 if line.startswith('__version__')][0]
 
@@ -18,8 +18,7 @@ setuptools.setup(
 
     description="Linc log formatter.",
     long_description=open('README.rst').read(),
-
-    py_modules=['log', 'log_formatter'],
+    packages=['linclogger'],
     zip_safe=False,
     platforms='any',
 
