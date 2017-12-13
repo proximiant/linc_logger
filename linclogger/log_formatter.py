@@ -3,7 +3,7 @@ This module defines linc general log formatter for application logs.
 New fields: error code, function name, process id, thread id.
 """
 
-import logging, socket
+import logging, socket, os
 from logmatic import JsonFormatter
 from logging import Formatter
 import json
