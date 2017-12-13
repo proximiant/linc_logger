@@ -17,6 +17,7 @@ class AppFilter(logging.Filter):
 
 class LincLogger():
     def __init__(self, service_name, config=None,log_level=None, log_filname=None, event_log_filname=None):
+        os.environ['SERVICE_NAME'] = service_name
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
             self.log_filename = config.get("LOG_FILENAME", log_filname)

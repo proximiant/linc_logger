@@ -11,7 +11,7 @@ import json
 import zlib
 
 log = logging.getLogger(__name__)
-SERVICE = 'arbiter'
+SERVICE = os.environ.get("SERVICE_NAME")
 
 
 class LincGeneralFormatter(JsonFormatter):
