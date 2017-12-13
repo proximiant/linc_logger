@@ -1,6 +1,6 @@
 import os
-import logmatic, zlib
 import setuptools
+import zlib
 
 module_path = os.path.join(os.path.dirname(__file__), 'log.py')
 version_line = [line for line in open(module_path)
