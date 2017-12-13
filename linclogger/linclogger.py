@@ -41,11 +41,11 @@ class LincLogger():
             },
             'formatters': {
                 'general_file': {
-                    '()': 'log_formatter.LincGeneralFormatter',
+                    '()': 'linclogger.log_formatter.LincGeneralFormatter',
                     'format': '%(asctime)%(levelname)%(name)%(funcName)%(process)%(thread)%(message)'
                 },
                 'linc_event': {
-                    '()': 'log_formatter.LincEventFormatter',
+                    '()': 'linclogger.log_formatter.LincEventFormatter',
                     'format': '%(asctime)%(levelname)%(funcName)%(message)'
 
                 },
