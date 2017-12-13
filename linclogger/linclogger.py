@@ -52,10 +52,6 @@ class LincLogger():
                 },
             },
             'handlers': {
-                'console': {
-                    'level': self.log_level,
-                    'class': 'logging.StreamHandler',
-                },
                 'app_file': {
                     'level': self.log_level,
                     'class': 'logging.handlers.RotatingFileHandler',
@@ -76,7 +72,7 @@ class LincLogger():
             },
             'loggers': {
                 '': {
-                    'handlers': ['console', 'app_file'],
+                    'handlers': ['app_file'],
                     'level': self.log_level,
                 },
                 'event': {
