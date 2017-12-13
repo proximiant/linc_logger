@@ -2,7 +2,7 @@ import os
 import setuptools
 import zlib
 
-module_path = os.path.join(os.path.dirname(__file__), 'linclogger/log.py')
+module_path = os.path.join(os.path.dirname(__file__), 'linclogger/linclogger.py')
 version_line = [line for line in open(module_path)
                 if line.startswith('__version__')][0]
 
