@@ -28,8 +28,8 @@ class LincLogger():
             self.event_log_filename = event_log_filename
 
         self.log_level = self.log_level or 'INFO'
-        self.log_filename = self.log_filename or 'var/log/linc_logger/err.log'
-        self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/event.log'
+        self.log_filename = self.log_filename or 'var/log/linc_logger/%s.log' % (service_name)
+        self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/%s.event.log' % (service_name)
         self.service_name = service_name
 
         self.logging = {
