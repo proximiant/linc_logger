@@ -16,20 +16,20 @@ class AppFilter(logging.Filter):
 
 
 class LincLogger():
-    def __init__(self, service_name, config=None,log_level=None, log_filname=None, event_log_filname=None):
+    def __init__(self, service_name, config=None, log_level=None, log_filename=None, event_log_filename=None):
         os.environ['SERVICE_NAME'] = service_name
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
-            self.log_filename = config.get("LOG_FILENAME", log_filname)
-            self.event_log_filname = config.get("EVENT_LOG_FILENAME", event_log_filname)
+            self.log_filename = config.get("LOG_FILENAME", log_filename)
+            self.event_log_filename = config.get("EVENT_LOG_FILENAME", event_log_filename)
         else: 
             self.log_level = log_level
-            self.log_filname = log_filname
-            self.event_log_filname = event_log_filname
+            self.log_filename = log_filename
+            self.event_log_filename = event_log_filename
 
         self.log_level = self.log_level or 'INFO'
         self.log_filename = self.log_filename or 'var/log/linc_logger/err.log'
-        self.event_log_filname = self.event_log_filname or 'var/log/linc_logger/event.log'
+        self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/event.log'
         self.service_name = service_name
 
         self.logging = {
@@ -65,7 +65,7 @@ class LincLogger():
                     'level': self.log_level,
                     'class': 'logging.handlers.RotatingFileHandler',
                     'formatter': 'linc_event',
-                    'filename': self.event_log_filname,
+                    'filename': self.event_log_filename,
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
                     'backupCount': 10,
                 },
