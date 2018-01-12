@@ -55,7 +55,7 @@ class LincLogger():
             'handlers': {
                 'app_file': {
                     'level': self.log_level,
-                    'class': ConcurrentRotatingFileHandler,
+                    'class': 'cloghandler.ConcurrentRotatingFileHandler',
                     'formatter': 'general_file',
                     'filename': self.log_filename,
                     'filters' : ['app_logs'],
@@ -64,7 +64,7 @@ class LincLogger():
                 },
                 'event_file': {
                     'level': self.log_level,
-                    'class': ConcurrentRotatingFileHandler,
+                    'class': 'cloghandler.ConcurrentRotatingFileHandler',
                     'formatter': 'linc_event',
                     'filename': self.event_log_filename,
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
