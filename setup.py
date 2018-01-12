@@ -22,7 +22,7 @@ setuptools.setup(
     zip_safe=False,
     platforms='any',
 
-    install_requires=["logmatic-python"],
+    install_requires=["logmatic-python", "ConcurrentLogHandler"],
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

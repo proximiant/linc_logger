@@ -1,8 +1,9 @@
-import logging, os
-import logmatic
+import logging
+import os
+from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 FILTERED_MODULES = (
   'kafka'
@@ -43,7 +44,7 @@ class LincLogger():
             'formatters': {
                 'general_file': {
                     '()': 'linclogger.log_formatter.LincGeneralFormatter',
-                    'format': '%(asctime)%(levelname)%(name)%(funcName)%(process)%(thread)%(message)'
+                    'format': '%(asctime)%(levelname)%(name)%(funcName)%(process)%(thread)%(message)%(lineno)'
                 },
                 'linc_event': {
                     '()': 'linclogger.log_formatter.LincEventFormatter',
@@ -54,7 +55,7 @@ class LincLogger():
             'handlers': {
                 'app_file': {
                     'level': self.log_level,
-                    'class': 'logging.handlers.RotatingFileHandler',
+                    'class': ConcurrentRotatingFileHandler,
                     'formatter': 'general_file',
                     'filename': self.log_filename,
                     'filters' : ['app_logs'],
@@ -63,7 +64,7 @@ class LincLogger():
                 },
                 'event_file': {
                     'level': self.log_level,
-                    'class': 'logging.handlers.RotatingFileHandler',
+                    'class': ConcurrentRotatingFileHandler,
                     'formatter': 'linc_event',
                     'filename': self.event_log_filename,
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
