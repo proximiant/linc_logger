@@ -3,7 +3,7 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 FILTERED_MODULES = (
   'kafka'
@@ -29,8 +29,8 @@ class LincLogger():
             self.event_log_filename = event_log_filename
 
         self.log_level = self.log_level or 'INFO'
-        self.log_filename = self.log_filename or 'var/log/linc_logger/%s.log' % (service_name)
-        self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/%s.event.log' % (service_name)
+        self.log_filename = self.log_filename or 'var/log/linc_logger/%s.log' % service_name
+        self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/%s.event.log' % service_name
         self.service_name = service_name
 
         self.logging = {
@@ -58,7 +58,7 @@ class LincLogger():
                     'class': 'cloghandler.ConcurrentRotatingFileHandler',
                     'formatter': 'general_file',
                     'filename': self.log_filename,
-                    'filters' : ['app_logs'],
+                    'filters': ['app_logs'],
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
                     'backupCount': 10,
                 },
@@ -88,7 +88,7 @@ class LincLogger():
 
     def get_logging_setup(self):
         log = self.logging
-        if os.environ.get('ENV', 'local') == 'local':
+        if os.environ.get('ENV', 'dev') == 'local':
             for logger in log['loggers'].keys():
                 log['loggers'][logger]['handlers'] = ['console']
             log['handlers'] = {'console': {'level': self.log_level, 'class': 'logging.StreamHandler'}}
