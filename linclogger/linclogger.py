@@ -3,21 +3,31 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
-FILTERED_MODULES = (
-  'kafka'
-  'connexion'
-)
+FILTERED_MODULES = [
+    'kafka',
+    'connexion'
+]
 
 
 class AppFilter(logging.Filter):
+    def __init__(self, modules=None, level=None):
+        self.modules = modules
+        self.level = level
+
     def filter(self, record):
-        return not (any((record.name.startswith(module) for module in FILTERED_MODULES)) and record.levelno < WARNING_LEVEL)
+        if not self.modules:
+            self.modules = []
+        if not self.level:
+            self.level = WARNING_LEVEL
+        self.modules += FILTERED_MODULES
+        return not (any((record.name.startswith(module) for module in self.modules)) and record.levelno <= self.level)
 
 
-class LincLogger():
-    def __init__(self, service_name, config=None, log_level=None, log_filename=None, event_log_filename=None):
+class LincLogger:
+    def __init__(self, service_name, config=None, log_level=None, log_filename=None, event_log_filename=None,
+                 filtered_modules=None, filter_level=None):
         os.environ['SERVICE_NAME'] = service_name
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
@@ -32,13 +42,17 @@ class LincLogger():
         self.log_filename = self.log_filename or 'var/log/linc_logger/%s.log' % service_name
         self.event_log_filename = self.event_log_filename or 'var/log/linc_logger/%s.event.log' % service_name
         self.service_name = service_name
+        self.filtered_modules = filtered_modules
+        self.filter_level = filter_level
 
         self.logging = {
             'version': 1,
             'disable_existing_loggers': False,
             'filters': {
                 'app_logs': {
-                    '()': AppFilter
+                    '()': AppFilter,
+                    'modules': self.filtered_modules,
+                    'level': self.filter_level
                 }
             },
             'formatters': {
