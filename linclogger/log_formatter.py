@@ -3,13 +3,13 @@ This module defines linc general log formatter for application logs.
 New fields: error code, function name, process id, thread id.
 """
 
-import logging
-import socket
-import os
 import datetime
-from logmatic import JsonFormatter
-
+import logging
+import os
+import socket
 import zlib
+
+from logmatic import JsonFormatter
 
 log = logging.getLogger(__name__)
 SERVICE = os.environ.get("SERVICE_NAME")
@@ -27,7 +27,6 @@ class LincGeneralFormatter(JsonFormatter):
 
         if self._extra is not None:
             for key, value in self._extra.items():
-                print (value)
                 log_record[key] = value
         errno = None
         if log_record['levelname'] in (logging.ERROR, logging.CRITICAL):
@@ -60,10 +59,12 @@ class LincGeneralFormatter(JsonFormatter):
         log_record['hostname'] = socket.gethostname()
         return log_record
 
+
 """
 This module defines Linc event log formatter for event logs.
 Typical usage: event_logger.info(category, action, event_dict)
 """
+
 
 class LincEventFormatter(JsonFormatter):
     """
