@@ -17,12 +17,15 @@ class AppFilter(logging.Filter):
         self.level = level
 
     def filter(self, record):
-        if not self.modules:
-            self.modules = []
-        if not self.level:
-            self.level = WARNING_LEVEL
-        self.modules += FILTERED_MODULES
+        if not self.modules or not self.level:
+            return True
         return not (any((record.name.startswith(module) for module in self.modules)) and record.levelno <= self.level)
+
+
+class DefaultFilter(logging.Filter):
+
+    def filter(self, record):
+        return not (any((record.name.startswith(module) for module in FILTERED_MODULES)) and record.levelno < WARNING_LEVEL)
 
 
 class LincLogger:
@@ -44,7 +47,6 @@ class LincLogger:
         self.service_name = service_name
         self.filtered_modules = filtered_modules
         self.filter_level = filter_level
-
         self.logging = {
             'version': 1,
             'disable_existing_loggers': False,
@@ -53,6 +55,9 @@ class LincLogger:
                     '()': AppFilter,
                     'modules': self.filtered_modules,
                     'level': self.filter_level
+                },
+                'default': {
+                    '()': DefaultFilter
                 }
             },
             'formatters': {
@@ -72,7 +77,7 @@ class LincLogger:
                     'class': 'cloghandler.ConcurrentRotatingFileHandler',
                     'formatter': 'general_file',
                     'filename': self.log_filename,
-                    'filters': ['app_logs'],
+                    'filters': ['app_logs', 'default'],
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
                     'backupCount': 10,
                 },
