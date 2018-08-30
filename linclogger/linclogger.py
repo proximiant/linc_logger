@@ -3,7 +3,7 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 FILTERED_MODULES = [
     'kafka',
@@ -98,6 +98,7 @@ class LincLogger:
                 'event': {
                     'handlers': ['event_file'],
                     'level': self.log_level,
+                    'propagate': False,
                 },
             },
         }
