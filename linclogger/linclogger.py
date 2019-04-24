@@ -106,14 +106,11 @@ class LincLogger:
     def get_service_name(self):
         return self.service_name
 
-    def get_logging_setup(self):
+    def get_logging_setup(self, use_console_out=False):
         log = self.logging
-        if os.environ.get('ENV', 'dev') == 'local':
+
+        if use_console_out or os.environ.get('ENV', 'dev') == 'local':
             for logger in log['loggers'].keys():
                 log['loggers'][logger]['handlers'] = ['console']
             log['handlers'] = {'console': {'level': self.log_level, 'class': 'logging.StreamHandler'}}
-        return log  
-
-
-
-
+        return log
