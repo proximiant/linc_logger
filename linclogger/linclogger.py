@@ -19,13 +19,15 @@ class AppFilter(logging.Filter):
     def filter(self, record):
         if not self.modules or not self.level:
             return True
-        return not (any((record.name.startswith(module) for module in self.modules)) and record.levelno <= self.level)
+        return not (any((record.name.startswith(module) for module in self.modules))
+                    and record.levelno < self.level)
 
 
 class DefaultFilter(logging.Filter):
 
     def filter(self, record):
-        return not (any((record.name.startswith(module) for module in FILTERED_MODULES)) and record.levelno < WARNING_LEVEL)
+        return not (any((record.name.startswith(module) for module in FILTERED_MODULES))
+                    and record.levelno < WARNING_LEVEL)
 
 
 class LincLogger:
