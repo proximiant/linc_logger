@@ -3,7 +3,7 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.8'
+__version__ = '0.0.9'
 
 FILTERED_MODULES = [
     'kafka',
@@ -32,12 +32,13 @@ class DefaultFilter(logging.Filter):
 
 class LincLogger:
     def __init__(self, service_name, config=None, log_level=None, log_filename=None, event_log_filename=None,
-                 filtered_modules=None, filter_level=None):
+                 filtered_modules=None, filter_level=None, add_console_log=False):
         os.environ['SERVICE_NAME'] = service_name
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
             self.log_filename = config.get("LOG_FILENAME", log_filename)
             self.event_log_filename = config.get("EVENT_LOG_FILENAME", event_log_filename)
+            self.add_console_log = bool(config.get('ADD_CONSOLE_LOG', add_console_log))
         else: 
             self.log_level = log_level
             self.log_filename = log_filename
@@ -115,4 +116,18 @@ class LincLogger:
             for logger in log['loggers'].keys():
                 log['loggers'][logger]['handlers'] = ['console']
             log['handlers'] = {'console': {'level': self.log_level, 'class': 'logging.StreamHandler'}}
+
+        # add console logs too useful for datadog
+        if self.add_console_log:
+            root_logger = log['loggers']['']
+            root_logger['handlers'] = root_logger['handlers'] + ['console']
+            log['handlers'] = {
+                'console': {
+                    'level': self.log_level,
+                    'class': 'logging.StreamHandler',
+                    'formatter': 'general_file',
+                    'filters': ['app_logs', 'default'],
+                }
+            }
+
         return log
