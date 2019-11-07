@@ -3,7 +3,7 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.0.9'
+__version__ = '0.1.0'
 
 FILTERED_MODULES = [
     'kafka',
@@ -121,13 +121,10 @@ class LincLogger:
         if self.add_console_log:
             root_logger = log['loggers']['']
             root_logger['handlers'] = root_logger['handlers'] + ['console']
-            log['handlers'] = {
-                'console': {
-                    'level': self.log_level,
-                    'class': 'logging.StreamHandler',
-                    'formatter': 'general_file',
-                    'filters': ['app_logs', 'default'],
-                }
+            log['handlers']['console'] = {
+                'level': self.log_level,
+                'class': 'logging.StreamHandler',
+                'formatter': 'general_file',
+                'filters': ['app_logs', 'default'],
             }
-
         return log
