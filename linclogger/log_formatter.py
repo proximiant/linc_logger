@@ -32,9 +32,9 @@ class LincGeneralFormatter(JsonFormatter):
             for key, value in self._extra.items():
                 log_record[key] = value
         if log_record['levelname'] in (logging.ERROR, logging.CRITICAL):
-            errno = None
             # genereate a checksum for the error
             if 'message' in log_record:
+                errno = None
                 try:
                     message = str(log_record['message'])
                     errno = zlib.adler32(message.encode('utf-8')) & 0xffffffff
