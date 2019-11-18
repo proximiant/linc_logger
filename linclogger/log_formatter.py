@@ -18,6 +18,9 @@ SERVICE = os.environ.get("SERVICE_NAME")
 class LincGeneralFormatter(JsonFormatter):
 
     def process_log_record(self, log_record):
+        # Add env to log record
+        env = os.environ.get("ENV", "dev")
+        log_record["env"] = env
         # Enforce the presence of a timestamp
         if "asctime" in log_record:
             log_record["timestamp"] = log_record["asctime"]
@@ -28,15 +31,19 @@ class LincGeneralFormatter(JsonFormatter):
         if self._extra is not None:
             for key, value in self._extra.items():
                 log_record[key] = value
-        errno = None
         if log_record['levelname'] in (logging.ERROR, logging.CRITICAL):
-            try:
-                errno = zlib.adler32(log_record['message'])
-            except zlib.error:
-                log.warn('Zlib cant calculate format string: %s checksum', log_record['message'])
-            except Exception as e:
-                log.warn('Fails to generate errno: %s', e)
-        log_record['errno'] = errno if errno is not None else ''
+            errno = None
+            # genereate a checksum for the error
+            if 'message' in log_record:
+                try:
+                    message = str(log_record['message'])
+                    errno = zlib.adler32(message.encode('utf-8')) & 0xffffffff
+                except zlib.error:
+                    log.warn('Zlib cant calculate format string: %s checksum', log_record['message'])
+                except Exception as e:
+                    log.warn('Fails to generate errno: %s', e)
+                if errno:
+                    log_record['errno'] = errno
         log_record = self.transform_logs(log_record)
         return super(JsonFormatter, self).process_log_record(log_record)
 

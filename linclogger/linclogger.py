@@ -3,7 +3,7 @@ import os
 from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 FILTERED_MODULES = [
     'kafka',
