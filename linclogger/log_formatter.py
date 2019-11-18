@@ -11,7 +11,7 @@ import zlib
 
 from logmatic import JsonFormatter
 
-log = logging.getLogger(__name__)
+LOG = logging.getLogger(__name__)
 SERVICE = os.environ.get("SERVICE_NAME")
 
 
@@ -39,9 +39,9 @@ class LincGeneralFormatter(JsonFormatter):
                     message = str(log_record['message'])
                     errno = zlib.adler32(message.encode('utf-8')) & 0xffffffff
                 except zlib.error:
-                    log.warn('Zlib cant calculate format string: %s checksum', log_record['message'])
+                    LOG.warn('Zlib cant calculate format string: %s checksum', log_record['message'])
                 except Exception as e:
-                    log.warn('Fails to generate errno: %s', e)
+                    LOG.warn('Fails to generate errno: %r', e)
                 if errno:
                     log_record['errno'] = errno
         log_record = self.transform_logs(log_record)
@@ -95,6 +95,6 @@ class LincEventFormatter(JsonFormatter):
         log_record['type'] = SERVICE + '-event-log'
         for field in required_fields:
             if field not in log_record:
-                log.exception("Field %s" % (required_fields[field]))
+                LOG.exception("Field %s" % (required_fields[field]))
                 raise Exception(required_fields[field])
         return super(JsonFormatter, self).process_log_record(log_record)
