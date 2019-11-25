@@ -109,7 +109,7 @@ class LincLogger:
     def get_service_name(self):
         return self.service_name
 
-    def get_logging_setup(self, use_console_out=False):
+    def get_logging_setup(self, use_console_out=True):
         log = self.logging
 
         if use_console_out or os.environ.get('ENV', 'dev') == 'local':
