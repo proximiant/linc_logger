@@ -32,7 +32,7 @@ class DefaultFilter(logging.Filter):
 
 class LincLogger:
     def __init__(self, service_name, config=None, log_level=None, log_filename=None, event_log_filename=None,
-                 filtered_modules=None, filter_level=None, add_console_log=False):
+                 filtered_modules=None, filter_level=None, add_console_log=True):
         os.environ['SERVICE_NAME'] = service_name
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
@@ -43,6 +43,7 @@ class LincLogger:
             self.log_level = log_level
             self.log_filename = log_filename
             self.event_log_filename = event_log_filename
+            self.add_console_log = add_console_log
 
         self.log_level = self.log_level or 'INFO'
         self.log_filename = self.log_filename or 'var/log/linc_logger/%s.log' % service_name
@@ -109,7 +110,7 @@ class LincLogger:
     def get_service_name(self):
         return self.service_name
 
-    def get_logging_setup(self, use_console_out=True):
+    def get_logging_setup(self, use_console_out=False):
         log = self.logging
 
         if use_console_out or os.environ.get('ENV', 'dev') == 'local':
