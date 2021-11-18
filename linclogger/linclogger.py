@@ -1,9 +1,8 @@
 import logging
 import os
-from cloghandler import ConcurrentRotatingFileHandler
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 FILTERED_MODULES = [
     'kafka',
@@ -67,12 +66,13 @@ class LincLogger:
             'formatters': {
                 'general_file': {
                     '()': 'linclogger.log_formatter.LincGeneralFormatter',
-                    'format': '%(asctime)%(levelname)%(name)%(funcName)%(process)%(thread)%(message)%(lineno)'
+                    'format': '%(asctime)%(levelname)%(name)%(funcName)%(process)%(thread)%(message)%(lineno)',
+                    'datefmt': '%Y-%m-%dT%H:%M:%S.%FZ%z',
                 },
                 'linc_event': {
                     '()': 'linclogger.log_formatter.LincEventFormatter',
-                    'format': '%(asctime)%(levelname)%(funcName)%(message)'
-
+                    'format': '%(asctime)%(levelname)%(funcName)%(message)',
+                    'datefmt': '%Y-%m-%dT%H:%M:%S.%FZ%z',
                 },
             },
             'handlers': {

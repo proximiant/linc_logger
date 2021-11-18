@@ -2,3 +2,7 @@
 *.yaml
 .idea/
 /venv/
+*.egg-info
+dist
+build
+.vscode

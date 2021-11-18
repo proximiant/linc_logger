@@ -7,6 +7,7 @@ import datetime
 import logging
 import os
 import socket
+import time
 import zlib
 
 from logmatic import JsonFormatter
@@ -14,8 +15,17 @@ from logmatic import JsonFormatter
 LOG = logging.getLogger(__name__)
 SERVICE = os.environ.get("SERVICE_NAME")
 
-
 class LincGeneralFormatter(JsonFormatter):
+
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        if datefmt:
+            if "%F" in datefmt:
+                msec = "%03d" % record.msecs
+                datefmt = datefmt.replace("%F", msec)
+            return time.strftime(datefmt, ct)
+        
+        return super().formatTime(record, datefmt)
 
     def process_log_record(self, log_record):
         # Add env to log record
@@ -77,6 +87,16 @@ class LincEventFormatter(JsonFormatter):
     """
     Linc event formatter
     """
+
+    def formatTime(self, record, datefmt=None):
+        ct = self.converter(record.created)
+        if datefmt:
+            if "%F" in datefmt:
+                msec = "%03d" % record.msecs
+                datefmt = datefmt.replace("%F", msec)
+            return time.strftime(datefmt, ct)
+        
+        return super().formatTime(record, datefmt)
 
     def process_log_record(self, log_record):
         required_fields = {
