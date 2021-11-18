@@ -2,8 +2,6 @@ import logging
 import os
 from logging import WARNING as WARNING_LEVEL
 
-from cloghandler import ConcurrentRotatingFileHandler
-
 __version__ = '0.1.1'
 
 FILTERED_MODULES = [
