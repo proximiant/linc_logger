@@ -15,21 +15,24 @@ from logmatic import JsonFormatter
 LOG = logging.getLogger(__name__)
 SERVICE = os.environ.get("SERVICE_NAME")
 
+def add_millisecond(self, record, datefmt):
+    # format time and add milliseconds for %F
+    ct = self.converter(record.created)
+    if datefmt:
+        if "%F" in datefmt:
+            msec = "%03d" % record.msecs
+            datefmt = datefmt.replace("%F", msec)
+        s = time.strftime(datefmt, ct)
+    else:
+        t = time.strftime("%Y-%m-%d %H:%M:%S", ct)
+        s = "%s,%03d" % (t, record.msecs)
+    return s
+
 
 class LincGeneralFormatter(JsonFormatter):
 
     def formatTime(self, record, datefmt=None):
-        # format time and add milliseconds for %F
-        ct = self.converter(record.created)
-        if datefmt:
-            if "%F" in datefmt:
-                msec = "%03d" % record.msecs
-                datefmt = datefmt.replace("%F", msec)
-            s = time.strftime(datefmt, ct)
-        else:
-            t = time.strftime("%Y-%m-%d %H:%M:%S", ct)
-            s = "%s,%03d" % (t, record.msecs)
-        return s
+        return(record, datefmt)
 
     def process_log_record(self, log_record):
         # Add env to log record
@@ -91,6 +94,9 @@ class LincEventFormatter(JsonFormatter):
     """
     Linc event formatter
     """
+
+    def formatTime(self, record, datefmt=None):
+        return(record, datefmt)
 
     def process_log_record(self, log_record):
         required_fields = {
