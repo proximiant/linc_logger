@@ -7,6 +7,7 @@ import datetime
 import logging
 import os
 import socket
+import time
 import zlib
 
 from logmatic import JsonFormatter
@@ -16,6 +17,19 @@ SERVICE = os.environ.get("SERVICE_NAME")
 
 
 class LincGeneralFormatter(JsonFormatter):
+
+    def formatTime(self, record, datefmt=None):
+        # format time and add milliseconds for %F
+        ct = self.converter(record.created)
+        if datefmt:
+            if "%F" in datefmt:
+                msec = "%03d" % record.msecs
+                datefmt = datefmt.replace("%F", msec)
+            s = time.strftime(datefmt, ct)
+        else:
+            t = time.strftime("%Y-%m-%d %H:%M:%S", ct)
+            s = "%s,%03d" % (t, record.msecs)
+        return s
 
     def process_log_record(self, log_record):
         # Add env to log record
