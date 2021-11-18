@@ -2,7 +2,7 @@ import logging
 import os
 from logging import WARNING as WARNING_LEVEL
 
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 
 FILTERED_MODULES = [
     'kafka',
