@@ -2,6 +2,8 @@ import logging
 import os
 from logging import WARNING as WARNING_LEVEL
 
+from concurrent_log_handler import ConcurrentRotatingFileHandler
+
 __version__ = '0.1.2'
 
 FILTERED_MODULES = [
@@ -36,9 +38,11 @@ class LincLogger:
         if config is not None and isinstance(config, dict):
             self.log_level = config.get("LOG_LEVEL", log_level)
             self.log_filename = config.get("LOG_FILENAME", log_filename)
-            self.event_log_filename = config.get("EVENT_LOG_FILENAME", event_log_filename)
-            self.add_console_log = bool(config.get('ADD_CONSOLE_LOG', add_console_log))
-        else: 
+            self.event_log_filename = config.get(
+                "EVENT_LOG_FILENAME", event_log_filename)
+            self.add_console_log = bool(config.get(
+                'ADD_CONSOLE_LOG', add_console_log))
+        else:
             self.log_level = log_level
             self.log_filename = log_filename
             self.event_log_filename = event_log_filename
@@ -78,7 +82,7 @@ class LincLogger:
             'handlers': {
                 'app_file': {
                     'level': self.log_level,
-                    'class': 'cloghandler.ConcurrentRotatingFileHandler',
+                    'class': 'concurrent_log_handler.ConcurrentRotatingFileHandler',
                     'formatter': 'general_file',
                     'filename': self.log_filename,
                     'filters': ['app_logs', 'default'],
@@ -87,7 +91,7 @@ class LincLogger:
                 },
                 'event_file': {
                     'level': self.log_level,
-                    'class': 'cloghandler.ConcurrentRotatingFileHandler',
+                    'class': 'concurrent_log_handler.ConcurrentRotatingFileHandler',
                     'formatter': 'linc_event',
                     'filename': self.event_log_filename,
                     'maxBytes': 1024 * 1024 * 5,  # 5 MB
@@ -116,7 +120,8 @@ class LincLogger:
         if use_console_out or os.environ.get('ENV', 'dev') == 'local':
             for logger in log['loggers'].keys():
                 log['loggers'][logger]['handlers'] = ['console']
-            log['handlers'] = {'console': {'level': self.log_level, 'class': 'logging.StreamHandler'}}
+            log['handlers'] = {'console': {
+                'level': self.log_level, 'class': 'logging.StreamHandler'}}
 
         # add console logs too useful for datadog
         if self.add_console_log:
