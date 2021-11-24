@@ -9,7 +9,7 @@ class TestLogger(unittest.TestCase):
     def test_logger(self):
 
         log = logging.getLogger("test")
-        linc_logger = LincLogger("test service")
+        linc_logger = LincLogger("test service", log_filename="test.log")
         dictConfig(linc_logger.get_logging_setup())
 
         log.info("this is a test")
@@ -17,7 +17,8 @@ class TestLogger(unittest.TestCase):
     def test_event_logger(self):
 
         log = logging.getLogger("event")
-        linc_logger = LincLogger("test service")
+        linc_logger = LincLogger(
+            "test service", event_log_filename="event.log")
         dictConfig(linc_logger.get_logging_setup())
 
         event = {
